@@ -7,11 +7,13 @@ import InterviewerListItem from "components/InterviewerListItem";
 import InterviewerList from "components/InterviewerList";
 import "index.scss";
 import Appointment from "components/appointment/index.js";
-import header from "components/appointment/header.js";
+import Header from "components/appointment/header.js";
 import Empty from "components/appointment/empty.js";
 import Show from "components/appointment/show.js";
 import Confirm from "components/appointment/confirm.js";
 import Button from "components/Button";
+import Status from "components/appointment/status.js";
+import Error from "components/appointment/error.js";
 
 storiesOf("Button", module)
   .addParameters({
@@ -175,4 +177,8 @@ const interviewers = [
       onCancel={action("onCancel")}
       onConfirm={action("onConfirm")}
     />
+  ))
+  .add("Status", () => <Status message="Deleting" />)
+  .add("Error", () => (
+    <Error message="Could not delete appointment." onClose={action("onClose")} />
   ))
