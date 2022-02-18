@@ -1,18 +1,22 @@
+
 export const getAppointmentsForDay = (state, day) => {
   const dayObj = state.days.find(elem => elem.name === day);
 
   if (!dayObj) {
     return [];
   }
-  const appointmentID = dayObj.appointments;
-  const appointmentsForEachDay = [];
+
+  const appointmentIds = dayObj.appointments;
+
+  const appointmentsForDay = [];
 
   for (const id in state.appointments) {
-    if (appointmentID.includes(Number(id))) {
-      appointmentsForEachDay.push(state.appointments[id]);
+    if (appointmentIds.includes(Number(id))) {
+      appointmentsForDay.push(state.appointments[id]);
     }
   }
-  return appointmentsForEachDay;
+
+  return appointmentsForDay;
 };
 
 
@@ -23,28 +27,29 @@ export const getInterviewersForDay = (state, day) => {
     return [];
   }
 
-  const interviewerID = dayObj.interviewers;
+  const interviewerIds = dayObj.interviewers;
 
-  const interviewersForEachDay = [];
+  const interviewersForDay = [];
 
   for (const id in state.interviewers) {
-    if (interviewerID.includes(Number(id))) {
-      interviewersForEachDay.push(state.interviewers[id]);
+    if (interviewerIds.includes(Number(id))) {
+      interviewersForDay.push(state.interviewers[id]);
     }
   }
 
-  return interviewersForEachDay;
+  return interviewersForDay;
 };
+
 
 export const getInterview = (state, interview) => {
   if (!interview) {
     return null;
   }
 
-  const interviewerID = interview.interviewer;
+  const interviewerId = interview.interviewer;
 
   for (const id in state.interviewers) {
-    if (Number(id) === interviewerID) {
+    if (Number(id) === interviewerId) {
       return {
         student: interview.student,
         interviewer: state.interviewers[id]
