@@ -1,17 +1,15 @@
 import React from "react";
-
-import DayList from "components/DayList";
-import Appointment from "components/appointment";
-import {
-  getAppointmentsForDay,
-  getInterviewersForDay,
-  getInterview
-} from "helpers/selectors";
-import useApplicationData from "hooks/useApplicationData";
+import DayList from "./DayList";
 
 import "components/Application.scss";
+import Appointment from "./Appointment";
+
+import useApplicationData from "hooks/useApplicationData";
+
+import  {getAppointmentsForDay, getInterviewersForDay, getInterview } from 'helpers/selectors.js';
 
 export default function Application(props) {
+
   const {
     state,
     setDay,
@@ -19,47 +17,50 @@ export default function Application(props) {
     cancelInterview
   } = useApplicationData();
 
-  const appointmentsForDay = getAppointmentsForDay(state, state.day);
-  const interviewersForDay = getInterviewersForDay(state, state.day);
+  const dailyInterviewers = getInterviewersForDay(state, state.day);
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
 
+  const appointmentsInSchedule = dailyAppointments.map(a => {
+    const interview = getInterview(state, a.interview);
 
-  const schedule = appointmentsForDay.map(appointment => {
-
-    const interview = getInterview(state, appointment.interview);
-
-    return (
-      <Appointment
-        key={appointment.id}
-        {...appointment}
-        interview={interview}
-        interviewers={interviewersForDay}
-        bookInterview={bookInterview}
-        cancelInterview={cancelInterview}
-      />
-    );
+    return <Appointment 
+    key={a.id} id={a.id} time={a.time} 
+    interview={interview} 
+    interviewers={dailyInterviewers} 
+    bookInterview={bookInterview}
+    cancelInterview={cancelInterview}
+    />
   });
 
-  return (
-    <main className="layout">
+  appointmentsInSchedule.push(<Appointment key="last" time={appointmentsInSchedule.length + "pm"} />)
+
+
+     return (
+      <main className="layout">
       <section className="sidebar">
         <img
-          className="sidebar--centered"
-          src="images/logo.png"
-          alt="Interview Scheduler"
+        className="sidebar--centered"
+        src="images/logo.png"
+        alt="Interview Scheduler"
         />
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
-          <DayList days={state.days} day={state.day} setDay={setDay} />
+        <DayList
+          value =  {state.day}  
+          days = {state.days}
+          onChange = {setDay}  
+          />
         </nav>
         <img
-          className="sidebar__lhl sidebar--centered"
-          src="images/lhl.png"
-          alt="Lighthouse Labs"
+        className="sidebar__lhl sidebar--centered"
+        src="images/lhl.png"
+        alt="Lighthouse Labs"
         />
       </section>
       <section className="schedule">
-        {schedule}
-        <Appointment id="last" time="5pm" />
+
+      {appointmentsInSchedule}
+      
       </section>
     </main>
   );

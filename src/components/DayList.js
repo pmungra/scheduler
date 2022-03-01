@@ -1,18 +1,22 @@
-import React from "react";
-import DayListItem from "components/DayListItem";
+import React from 'react';
+import DayListItem from 'components/DayListItem';
 
+// DayList renders a list of DayListItem components
 export default function DayList(props) {
+
+  const { days, value, onChange } = props;
+
+  const dayListItems = days.map(d => {
+ 
     return (
-      <ul>
-        {props.days.map(day => (
-          <DayListItem
-            key={day.id}
-            name={day.name}
-            spots={day.spots}
-            selected={props.day === day.name}
-            setDay={props.setDay}
-          />
-        ))}
-      </ul>
-    );
-  }
+      <DayListItem
+        key={d.id}
+        name={d.name}
+        spots={d.spots}
+        selected={d.name === value}
+        setDay={onChange}
+       />
+    )
+  })
+  return <ul>{dayListItems}</ul>
+}

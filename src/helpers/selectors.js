@@ -1,49 +1,45 @@
+export function getAppointmentsForDay (state, day) {
+  
+  const appointments = [];
 
-export const getAppointmentsForDay = (state, day) => {
-  const dayObj = state.days.find(elem => elem.name === day);
-  if (!dayObj) {
-    return [];
-  }
-  const appointmentIds = dayObj.appointments;
-  const appointmentsForDay = [];
-  for (const id in state.appointments) {
-    if (appointmentIds.includes(Number(id))) {
-      appointmentsForDay.push(state.appointments[id]);
+  for (const d of state.days) {
+    if (d.name === day) {
+      d.appointments.forEach((id) => appointments.push(state.appointments[id]));
     }
   }
-  return appointmentsForDay;
-};
 
+  return appointments;
+} 
 
-export const getInterviewersForDay = (state, day) => {
-  const dayObj = state.days.find(elem => elem.name === day);
-  if (!dayObj) {
-    return [];
-  }
-  const interviewerIds = dayObj.interviewers;
-  const interviewersForDay = [];
-  for (const id in state.interviewers) {
-    if (interviewerIds.includes(Number(id))) {
-      interviewersForDay.push(state.interviewers[id]);
+export function getInterviewersForDay(state, day) {
+  const interviewers = [];
+
+  for (const d of state.days) {
+    if (d.name === day) {
+      d.interviewers.forEach((id) => {
+        interviewers.push(state.interviewers[id]);
+      });
     }
   }
-  return interviewersForDay;
-};
 
+  return interviewers;
+}
 
-export const getInterview = (state, interview) => {
-  if (!interview) {
-    return null;
+export function getInterview(state, interview) {
+  let result = null;
+
+  if (interview !== null) {
+    result = {};
+
+    const student = interview.student;
+    const interviewerId = interview.interviewer;
+    
+    const interviewerName = state.interviewers[interviewerId] && state.interviewers[interviewerId].name;
+    const interviewerAvatar = state.interviewers[interviewerId] && state.interviewers[interviewerId].avatar;
+
+    result.student = student;
+    result.interviewer = { id: interviewerId, name: interviewerName, avatar: interviewerAvatar };
   }
 
-  const interviewerId = interview.interviewer;
-
-  for (const id in state.interviewers) {
-    if (Number(id) === interviewerId) {
-      return {
-        student: interview.student,
-        interviewer: state.interviewers[id]
-      };
-    }
-  }
-};
+  return result;
+}
